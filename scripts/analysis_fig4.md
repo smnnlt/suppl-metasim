@@ -73,12 +73,12 @@ fitdata <- data.frame(
   y = seq(0.001,1,0.001)
 )
 
-# write data source as factor
+# write data source and type (discipline) as factor
 data$source <- factor(data$source,
   levels = c("Quittmann2019","Quittmann2021","Weber2003","Hauser2014"),
   labels = c(
-    "Quittmann et al. (unpbl 1)", 
-    "Quittmann et al. (unpbl 2)", 
+    "Quittmann et al. (unpbl, a)", 
+    "Quittmann et al. (unpbl, b)", 
     "Weber (2003)", 
     "Hauser et al. (2014)"
   )
@@ -88,7 +88,7 @@ data$source <- factor(data$source,
 ggplot(data, aes(x = vo2max_vlamax, y = vo2_per)) +
   geom_line(data = fitdata, aes(x = x_cyc, y = y), colour = met.brewer("Ingres")[5]) +
   geom_line(data = fitdata, aes(x = x_run, y = y), colour = met.brewer("Ingres")[3]) +
-  geom_point(aes(fill = source), shape = 21, colour = "white", size = 2.5) +
+  geom_point(aes(fill = source, shape = source), colour = "white", size = 2.5) +
   annotate(
     "text",
     x = 200, y = 0.82,
@@ -120,14 +120,21 @@ ggplot(data, aes(x = vo2max_vlamax, y = vo2_per)) +
       ),
     limits = c(0,250), 
     breaks = seq(0,250,50),
-    expand = c(0,5)) +
+    expand = c(0,5)
+  ) +
   scale_y_continuous(
     name = expression(italic(paste("\u0025",dot(V),O[2](MLSS)))),
     limits = c(0.5,1), 
     breaks = seq(0,1,0.1),
-    expand = c(0,0)) +
+    expand = c(0,0)
+  ) +
   scale_fill_manual(
+    name = "source",
     values = met.brewer("Ingres", 4)
+  ) +
+  scale_shape_manual(
+    name = "source",
+    values = c(21, 21, 24, 24)
   ) +
   theme_bw() +
   theme(
@@ -135,13 +142,13 @@ ggplot(data, aes(x = vo2max_vlamax, y = vo2_per)) +
     legend.title = element_blank(),
     legend.text = element_text(family = "serif"),
     axis.title = element_text(family = "serif", face = "italic"),
-    axis.text = element_text(family = "serif", colour = "black")
+    axis.text = element_text(colour = "black")
   )
 ```
 
-![](analysis_fig4_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+<img src="analysis_fig4_files/figure-gfm/unnamed-chunk-1-1.png" width="70%" style="display: block; margin: auto;" />
 
 ``` r
 # save plot
-ggsave("../plot/Fig4.png", dpi = 600, width = 5, height = 3.5, bg = "white")
+ggsave("../plots/Fig4.png", dpi = 600, width = 5, height = 3.5, bg = "white")
 ```
