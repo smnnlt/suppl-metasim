@@ -1,0 +1,144 @@
+---
+output: github_document
+---
+
+# Supplemental script to "Simulation of Steady State Energy Metabolism in Cyling and Running"
+
+## Script for model fitting and creation of figure 4
+
+*Script written by Simon Nolte (2022).*
+
+### Setup
+
+```{r setup}
+library(ggplot2)
+library(MetBrewer)
+```
+
+### Import and clean data
+
+```{r import}
+# read data
+data <- read.csv("../data/data.csv")
+
+# remove extremely low and extremely high values for %VO(AT) as these are likely
+# caused by measurement errors
+data <- data[data$vo2_per > 0.5 & data$vo2_per < 0.98,]
+
+# create variable for ration of vo2max and VLamax
+data$vo2max_vlamax <- data$vo2max / data$vlamax
+```
+
+### Fit lactate elimination constant
+
+```{r fit}
+
+# function for fitting of k_re (constant of lactate removal)
+fit_sim <- function(d) {
+  fit <- nls(
+    vo2max_vlamax ~ 60 / (a * vo2_per * (1+ ((1.1 / 0.2512 * ((1 - vo2_per)/ vo2_per)^(1 / 2))^3))), 
+    data = d, 
+    start = list(a = 0.1)
+  )
+  param <- summary(fit)$coefficients[[1]]
+  confs <- suppressMessages(confint(fit))
+  list(
+    data.frame(
+      estimate = param,
+      ci_low = confs[[1]],
+      ci_high = confs[[2]]
+    ),
+    fit
+  )
+}
+
+# filter data by exercise type
+d_run <- data[data$type == "running",]
+d_cyc <- data[data$type == "cycling",]
+
+# fit k_re for cycling and running data
+fit_params <- rbind(fit_sim(d_cyc)[[1]], fit_sim(d_run)[[1]])
+fit_params$type = c("cycling", "running")
+
+fit_params
+```
+
+### Create plot (Figure 4)
+
+```{r, warning = FALSE}
+# calculate %VO2(MLSS) predictions from model
+fitdata <- data.frame(
+  x_cyc = predict(fit_sim(d_cyc)[[2]], list(vo2_per = seq(0.001,1,0.001))),
+  x_run = predict(fit_sim(d_run)[[2]], list(vo2_per = seq(0.001,1,0.001))),
+  y = seq(0.001,1,0.001)
+)
+
+# write data source as factor
+data$source <- factor(data$source,
+  levels = c("Quittmann2019","Quittmann2021","Weber2003","Hauser2014"),
+  labels = c(
+    "Quittmann et al. (unpbl 1)", 
+    "Quittmann et al. (unpbl 2)", 
+    "Weber (2003)", 
+    "Hauser et al. (2014)"
+  )
+)
+
+# Create plot
+ggplot(data, aes(x = vo2max_vlamax, y = vo2_per)) +
+  geom_line(data = fitdata, aes(x = x_cyc, y = y), colour = met.brewer("Ingres")[5]) +
+  geom_line(data = fitdata, aes(x = x_run, y = y), colour = met.brewer("Ingres")[3]) +
+  geom_point(aes(fill = source), shape = 21, colour = "white", size = 2.5) +
+  annotate(
+    "text",
+    x = 200, y = 0.82,
+    colour = met.brewer("Ingres")[5],
+    label = "cycling",
+    family = "serif"
+  ) +
+  annotate(
+    "text",
+    x = 165, y = 0.95,
+    colour = met.brewer("Ingres")[3],
+    label = "running",
+    family = "serif"
+  ) +
+  scale_x_continuous(
+    name = expression(
+      italic(
+        paste(
+          dot(V),
+          O[paste("2\u002cmax")]/dot(c),
+          La[max], 
+          paste(
+            " (ml\u00b7l\u00b7s\u00b7",
+            min^-1,"\u00b7",
+            kg^-1,"\u00b7",
+            mmol^-1, ")")
+          )
+        )
+      ),
+    limits = c(0,250), 
+    breaks = seq(0,250,50),
+    expand = c(0,5)) +
+  scale_y_continuous(
+    name = expression(italic(paste("\u0025",dot(V),O[2](MLSS)))),
+    limits = c(0.5,1), 
+    breaks = seq(0,1,0.1),
+    expand = c(0,0)) +
+  scale_fill_manual(
+    values = met.brewer("Ingres", 4)
+  ) +
+  theme_bw() +
+  theme(
+    legend.position = c(0.75,0.25),
+    legend.title = element_blank(),
+    legend.text = element_text(family = "serif"),
+    axis.title = element_text(family = "serif", face = "italic"),
+    axis.text = element_text(family = "serif", colour = "black")
+  )
+
+# save plot
+ggsave("../plots/Fig4.png", dpi = 600, width = 5, height = 3.5, bg = "white")
+```
+

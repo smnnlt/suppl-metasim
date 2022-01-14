@@ -1,17 +1,22 @@
----
-output: github_document
----
 
-```{r setup}
+# Supplemental script to “Simulation of Steady State Energy Metabolism in Cyling and Running”
+
+## Script for model fitting and creation of figure 4
+
+*Script written by Simon Nolte (2022).*
+
+### Setup
+
+``` r
 library(ggplot2)
 library(MetBrewer)
 ```
 
-## Import and clean data
+### Import and clean data
 
-```{r import}
+``` r
 # read data
-data <- read.csv("data.csv")
+data <- read.csv("../data/data.csv")
 
 # remove extremely low and extremely high values for %VO(AT) as these are likely
 # caused by measurement errors
@@ -21,10 +26,9 @@ data <- data[data$vo2_per > 0.5 & data$vo2_per < 0.98,]
 data$vo2max_vlamax <- data$vo2max / data$vlamax
 ```
 
-## Fit lactate elimination constant
+### Fit lactate elimination constant
 
-```{r fit}
-
+``` r
 # function for fitting of k_re (constant of lactate removal)
 fit_sim <- function(d) {
   fit <- nls(
@@ -55,9 +59,13 @@ fit_params$type = c("cycling", "running")
 fit_params
 ```
 
-## Create plot (Figure 4)
+    ##     estimate     ci_low    ci_high    type
+    ## 1 0.04719406 0.04418253 0.05064699 cycling
+    ## 2 0.13466652 0.12077374 0.15217830 running
 
-```{r}
+### Create plot (Figure 4)
+
+``` r
 # calculate %VO2(MLSS) predictions from model
 fitdata <- data.frame(
   x_cyc = predict(fit_sim(d_cyc)[[2]], list(vo2_per = seq(0.001,1,0.001))),
@@ -68,7 +76,12 @@ fitdata <- data.frame(
 # write data source as factor
 data$source <- factor(data$source,
   levels = c("Quittmann2019","Quittmann2021","Weber2003","Hauser2014"),
-  labels = c("Quittmann et al. (unpbl 1)", "Quittmann et al. (unpbl 2)", "Weber (2003)", "Hauser et al. (2014)")
+  labels = c(
+    "Quittmann et al. (unpbl 1)", 
+    "Quittmann et al. (unpbl 2)", 
+    "Weber (2003)", 
+    "Hauser et al. (2014)"
+  )
 )
 
 # Create plot
@@ -91,7 +104,20 @@ ggplot(data, aes(x = vo2max_vlamax, y = vo2_per)) +
     family = "serif"
   ) +
   scale_x_continuous(
-    name = expression(italic(paste(dot(V),O[paste("2\u002cmax")]/dot(c),La[max], paste(" (ml\u00b7l\u00b7s\u00b7",min^-1,"\u00b7",kg^-1,"\u00b7",mmol^-1, ")")))),
+    name = expression(
+      italic(
+        paste(
+          dot(V),
+          O[paste("2\u002cmax")]/dot(c),
+          La[max], 
+          paste(
+            " (ml\u00b7l\u00b7s\u00b7",
+            min^-1,"\u00b7",
+            kg^-1,"\u00b7",
+            mmol^-1, ")")
+          )
+        )
+      ),
     limits = c(0,250), 
     breaks = seq(0,250,50),
     expand = c(0,5)) +
@@ -111,7 +137,11 @@ ggplot(data, aes(x = vo2max_vlamax, y = vo2_per)) +
     axis.title = element_text(family = "serif", face = "italic"),
     axis.text = element_text(family = "serif", colour = "black")
   )
-
-ggsave("Fig4.png", dpi = 600, width = 5, height = 3.5, bg = "white")
 ```
 
+![](analysis_fig4_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+
+``` r
+# save plot
+ggsave("../plot/Fig4.png", dpi = 600, width = 5, height = 3.5, bg = "white")
+```
