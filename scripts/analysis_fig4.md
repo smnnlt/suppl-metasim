@@ -77,8 +77,8 @@ fitdata <- data.frame(
 data$source <- factor(data$source,
   levels = c("Quittmann2019","Quittmann2021","Weber2003","Hauser2014"),
   labels = c(
-    "Quittmann et al. (unpbl, a)", 
-    "Quittmann et al. (unpbl, b)", 
+    "Quittmann et al. (unpubl, a)", 
+    "Quittmann et al. (unpubl, b)", 
     "Weber (2003)", 
     "Hauser et al. (2014)"
   )
