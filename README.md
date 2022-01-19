@@ -7,3 +7,4 @@ This repository contains the following files:
 - Scripts for creating figures (in [/scripts](https://github.com/smnnlt/suppl-metasim/tree/master/scripts))
 - Figures (in [/plots](https://github.com/smnnlt/suppl-metasim/tree/master/plots))
 
+All plots are released under a [CC-BY](http://creativecommons.org/licenses/by/4.0/) license, all code is additionally released under a MIT license.
