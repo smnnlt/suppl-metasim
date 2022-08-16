@@ -75,12 +75,19 @@ fitdata <- data.frame(
 
 # write data source and type (discipline) as factor
 data$source <- factor(data$source,
-  levels = c("Quittmann2019","Quittmann2021","Weber2003","Hauser2014"),
+  levels = c(
+    "Quittmann2019",
+    "Quittmann2021",
+    "Weber2003",
+    "Wahl2017",
+    "Hauser2012"
+  ),
   labels = c(
-    "Quittmann et al. (unpubl, a)", 
-    "Quittmann et al. (unpubl, b)", 
-    "Weber (2003)", 
-    "Hauser et al. (2014)"
+    "Quittmann et al. (unpubl)", 
+    "Schwarz et al. (unpubl)", 
+    "Weber (2003)",
+    "Wahl et al. (2017)",
+    "Hauser (2012)"
   )
 )
 
@@ -130,11 +137,11 @@ ggplot(data, aes(x = vo2max_vlamax, y = vo2_per)) +
   ) +
   scale_fill_manual(
     name = "source",
-    values = met.brewer("Ingres", 4)
+    values = c(met.brewer("Ingres", 4)[1:2], met.brewer("Ingres", 7)[5:7])
   ) +
   scale_shape_manual(
     name = "source",
-    values = c(21, 21, 24, 24)
+    values = c(21, 21, 24, 24, 24)
   ) +
   theme_bw() +
   theme(
