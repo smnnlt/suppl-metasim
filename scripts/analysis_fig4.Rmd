@@ -137,7 +137,7 @@ ggplot(data, aes(x = vo2max_vlamax, y = vo2_per)) +
   ) +
   scale_fill_manual(
     name = "source",
-    values = c(met.brewer("Ingres", 4)[1:2], met.brewer("Ingres", 7)[5:7])
+    values = c(met.brewer("Ingres", 4)[1:2], met.brewer("Ingres", 11)[c(7,9,11)])
   ) +
   scale_shape_manual(
     name = "source",

@@ -26,21 +26,13 @@ $$
 
 Rewriting the normalized oxygen uptake equation for ADP:
 
-$$
-\%\dot{V}O_2 = {1 \over 1 + ({K_{ox} \over [ADP]})^ {n_{ox}}}
-$$
+\begin{align*}
+\%\dot{V}O_2 &= {1 \over 1 + ({K_{ox} \over [ADP]})^ {n_{ox}}} \\
+\iff {1 \over \%\dot{V}O_2} - 1 &= ({K_{ox} \over [ADP]}) ^ {n_{ox}} \\
+\iff ({1 - \%\dot{V}O_2 \over \%\dot{V}O_2})^{1 \over n_{ox}} &= {K_{ox} \over {[ADP]}} \\
+\iff [ADP] &= K_{ox}({1-\%\dot{V}O_2 \over \%\dot{V}O_2})^{-{1 \over n_{ox}}}
+\end{align*}
 
-$$
-\iff {1 \over \%\dot{V}O_2} - 1 = ({K_{ox} \over ADP}) ^ {n_{ox}}
-$$
-
-$$
-\iff ({1 - \%\dot{V}O_2 \over \%\dot{V}O_2})^{1 \over n_{ox}} = {K_{ox} \over {ADP}}
-$$
-
-$$
-\iff ADP = K_{ox}({1-\%\dot{V}O_2 \over \%\dot{V}O_2})^{-{1 \over n_{ox}}}
-$$
 
 Plug in the result into the normalized lactate production equation:
 
