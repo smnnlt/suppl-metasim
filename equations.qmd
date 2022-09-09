@@ -1,0 +1,81 @@
+---
+title: "Supplement to 'Simulation of Steady State Energy Metabolism in Cyling and Running'"
+format: pdf
+editor: visual
+---
+
+We take the equations for the activation of the oxygen uptake (Eq. 1) and of the lactate production (Eq. 2).
+
+$$
+\dot{V}O_2 = {\dot{V}O_{2,max} \over 1 + ({K_{ox} \over [ADP]})^ {n_{ox}}}
+$$
+
+$$
+\dot{c}La_{pr} = {\dot{c}La_{max} \over 1 + ({K_{La} \over [ADP]})^ {n_{La}}}
+$$
+
+We normalize the rate of oxygen uptake and the rate of lactate production in relation to its natural reference values VO_2,max and cLa_max:
+
+$$
+{\%\dot{V}O_2 = {{\dot{V}O_2} \over {\dot{V}O_{2,max}}}} = {1 \over 1 + ({K_{ox} \over [ADP]})^ {n_{ox}}}
+$$
+
+$$
+{\%\dot{c}La_{pr} = {{\dot{c}La_{pr}} \over {\dot{c}La_{max}}}}  = {1 \over 1 + ({K_{La} \over [ADP]})^ {n_{La}}}
+$$
+
+Rewriting the normalized oxygen uptake equation for ADP:
+
+\begin{align*}
+\%\dot{V}O_2 &= {1 \over 1 + ({K_{ox} \over [ADP]})^ {n_{ox}}} \\
+\iff {1 \over \%\dot{V}O_2} - 1 &= ({K_{ox} \over [ADP]}) ^ {n_{ox}} \\
+\iff ({1 - \%\dot{V}O_2 \over \%\dot{V}O_2})^{1 \over n_{ox}} &= {K_{ox} \over {[ADP]}} \\
+\iff [ADP] &= K_{ox}({1-\%\dot{V}O_2 \over \%\dot{V}O_2})^{-{1 \over n_{ox}}}
+\end{align*}
+
+
+Plug in the result into the normalized lactate production equation:
+
+$$
+{\%\dot{c}La_{pr} = {1 \over 1 + ({K_{La} \over (K_{ox}({1-\%\dot{V}O_2 \over \%\dot{V}O_2})^{-{1 \over n_{ox}}})})^ {n_{La}}}}
+$$
+
+$$
+\iff {\%\dot{c}La_{pr} = {(1 + {{K_{La} \over K_{ox}} ({1-\%\dot{V}O_2 \over \%\dot{V}O_2})^{1 \over n_{ox}}})^ {n_{La}}}})^{-1}
+$$
+
+The equation for the rate of lactate removal (Eq. 3) is:
+
+$$
+\dot{c}La_{re} = \dot{V}O_2 * k_{re} 
+$$
+
+normalized to:
+
+$$
+\%\dot{c}La_{re} = {\dot{c}La_{re} \over {\dot{c}La_{max}}} = \dot{V}O_2 * k_{re} * {\dot{c}La_{max}}^{-1}
+$$
+
+We replace VO2 with (%VO2\*VO2max)
+
+$$
+\%\dot{c}La_{re} =  \%\dot{V}O_2 * k_{re} * {\dot{V}O_{2,max} \over \dot{c}La_{max}}
+$$
+
+We define the net lactate accumulation rate (Eq. 4):
+
+$$
+\dot{c}La_{net} = \dot{c}La_{pr} - \dot{c}La_{re} 
+$$
+
+normalized to:
+
+$$
+\%\dot{c}La_{net} = {{\dot{c}La_{net}} \over {\dot{c}La_{max}}} = \%\dot{c}La_{pr} - \%\dot{c}La_{re} 
+$$
+
+Plug in the equations for %cLa_pr and %cLa_re into this yields Equation 6:
+
+$$
+\%\dot{c}La_{net} = {{(1 + {{K_{La} \over K_{ox}} ({1-\%\dot{V}O_2 \over \%\dot{V}O_2})^{1 \over n_{ox}}})^{n_{La}}}})^{-1} - \%\dot{V}O_2 * k_{re} * {\dot{V}O_{2,max} \over \dot{c}La_{max}}
+$$
